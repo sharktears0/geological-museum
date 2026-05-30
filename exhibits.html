@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Экспонаты</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -21,11 +21,160 @@
 
     <main>
         <h1>Наши экспонаты</h1>
+
+        <div class="exhibits-grid" id="exhibits-grid">
+        </div>
     </main>
 
     <footer>
-        <p>© 2026 Геологический музей ИноЗ ЮФУ. Все права защищены.</p>
+        <p>© 2026 Геологический музей ИноЗ ЮФУ</p>
         <p>г. Ростов-на-Дону, ул. Зорге 40</p>
     </footer>
+
+    <div id="image-modal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="full-image">
+        <div id="caption"></div>
+    </div>
+ <style>
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            cursor: pointer;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 45px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #bbb;
+        }
+
+        #caption {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+            z-index: 1001;
+        }
+
+        .exhibit-card img {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .exhibit-card img:hover {
+            transform: scale(1.02);
+        }
+    </style>
+
+    <script>
+        const exhibits = [
+            { name: "Pocillopora verrucosa", desc: "Pocillopora verrucosa является типичным видом кораллов для тропических и субтропических частей Индийского и Тихого океанов. Его широкий ареал простирается от Восточной Африки и Красного моря до Японии, Индонезии, Австралии, Гавайев, острова Пасхи и западного побережья Центральной Америки и встречается на глубине до 54 м. Это обычный вид в большей части своего ареала и встречается на окаймляющих рифах и умеренно открытых рифовых фронтах.", img: "images/pocillopora.jpg" },
+            { name: "Raja clavata", desc: "Морская лисица — это донный хрящевой скат из семейства скатовых, обитающий в северо-восточной Атлантике, Средиземном, Чёрном и частично Азовском морях. В России встречается у побережья Чёрного моря. Отличается плоским ромбовидным телом с шипами на спине и хвосте. Средняя длина — до 1,2 м. Обитает на глубинах от 20 до 500 м, предпочитает иловатые и песчаные грунты. Вид медленно размножается и занесён в Красный список МСОП как уязвимый (VU) из-за переловов. Морская лисица (Raja clavata) относится к животным хрящевым рыбам и входит в семейство скатовых.", img: "images/raja.jpg" },
+            { name: "Alethopteris lonchitica", desc: "Alethopteris lonchitica – это ископаемый вид папоротников, относящийся к группе птеридоспермов (семенных папоротников), которые были широко распространены в каменноугольный период (карбон, около 359–299 млн лет назад). Отличается крупными, перистыми листьями, на которых расположены удлинённые листочки. Листочки имеют ланцетовидную форму с цельным или слегка зубчатым краем.", img: "images/aletho.jpeg" },
+            { name: "Alethopteris serlii", desc: "Листья папоротника Alethopteris serlii - это вымерший вид папоротниковидных растений, относящийся к роду Alethopteris, который был широко распространён в каменноугольном и пермском периодах (примерно 359–252 млн. лет назад). Эти растения входят в группу семенных папоротников (Pteridospermatophyta), которые, несмотря на внешнее сходство с настоящими папоротниками, размножались семенами, а не спорами. Ископаемые остатки растений особенно распространены в каменноугольном периоде, когда они образовывали уголь. Обычные ископаемые остатки растений — это листья, семена и стебли. На микроскопическом уровне ископаемая пыльца является ценным инструментом для определения климатических изменений.", img: "images/alethopteris-serlii.jpeg" },
+            { name: "Trigonocarpus noeggerathii", desc: "Семена птеридоспермов вида Trigonocarpus noeggerathii представляют собой древнюю группу растений. Эти растения известны преимущественно из палеозойских отложений Европы и Северной Америки. Вид семян принадлежит вымершим семенным папоротникам (птеридоспермам), которые были широко распространены в каменноугольном и пермском периодах. Эти растения занимали промежуточное положение между папоротниками и голосеменными, сочетая папоротниковидные листья с семенным размножением. Эти семена встречаются преимущественно в болотистых и влажных низменностях, где были распространены водно-болотные экосистемы эпохи карбона и перми. Их широкое распространение позволяет ученым реконструировать древние ландшафты и климатические условия тех эпох.", img: "images/trigonocarpus.jpeg" },
+            { name: "Crinoidea", desc: "Морские лилии или криноидеи (Crinoidea) – донные животные с преимущественно сидячим образом жизни. Именно животные, относящиеся к типу иглокожих (Echinodermata), а вовсе не растения, как может показаться из названия. Как и всех иглокожих наблюдается пятилучевая симметрия. Это хорошо заметно по строению канала в центре стебля. Часто канал имеет форму пятиконечной звезды или «цветка» с пятью лепестками. Хотя, чаще всего канал просто круглый. Иногда сам стебель имеет пятиугольную форму, тогда членики лилии похожи на маленькие звездочки. Тело состоит из стебля, чашечки, в центре которой находится рот, а вверх отходит венчик из ветвящихся лучей.", img: "images/crinoidea.jpg" },
+            { name: "Brachiopoda", desc: "Брахиоподы (тип Вrachiopoda или Плеченогие) – это исключительно морские одиночные животные, ведущие бентосный, прикрепленный образ жизни. Появились в кембрии, существуют поныне, в палеозое достигли исключительного разнообразия, являясь одной из основных групп, на базе которой строится в значительной мере стратиграфия палеозоя. Их мягкое тело заключено в двустворчатую раковину и окружено оболочкой-мантией. Они двусторонне-симметричные. Плоскость симметрии делит каждую створку раковины пополам. Её поверхность может быть гладкой либо иметь ребра, складки, иглы. Раковина состоит из брюшной и спинной створок. Длина раковины – от 0,1 до 10 см в длину (в среднем – 3-5) у современных видов. У вымерших она могла достигать 30-40 см.", img: "images/brachiopoda.jpg" },
+            { name: "Scleractinia fungia", desc: "Первые склерактинии появились в начале среднего триаса. В конце триаса - число родов значительно увеличилось; они распространились по всей средиземноморской области от Южной Европы до Малайзии и в пределах этой области, распространявшейся от 60° с. ш. до 10° ю. ш:, в зоне мелководья строили рифы, биогермы и рифовые банки.  В юрский период склерактинии начали проникать в более глубокие зоны моря, адаптироваться к жизни при более низких температурах. Скелет пористый; септы построены из многочисленных трабекул; одиночные или колониальные; размеры полипов обычно более 2 мм, полипы несут более 2-х венчиков щупалец, имеются синаптикулы. Средний триас - ныне. Фунгии довольно подвижны и плавучи. Если их перевернуть они способны сами вернуть себя в прежнее положение. Это происходит из-за большого количества воды в тканях, что делает их более плавучими и способными использовать поток воды в качестве транспорта. Также интересен факт популярности этих кораллов в аквариумах:их выращивают и используют как декорации.", img: "images/fungia.jpg" },
+            { name: "Echinocorys sulcatus goldfuss", desc: "Окаменелости Echinocorys sulcatus используются для определения возраста меловых отложений в Европе и Северной Африке. Отличался уплощённым телом и выраженными бороздами (сулькатами) на панцире, что помогало ему зарываться в мягкие грунты. Существовал непосредственно перед мел-палеогеновым вымиранием (66 млн лет назад), что делает его важным объектом для изучения экосистем конца мезозоя. Диаметр панциря достигал 5–8 см, что типично для многих меловых морских ежей. Вероятно, был детритофагом — питался органическими остатками со дна.", img: "images/echinocorys.jpg" },
+            { name: "Опал", desc: "Переливающийся всеми цветами радуги драгоценный камень.", img: "images/opal.jpg" },
+            { name: "Янтарь", desc: "Окаменевшая смола древних деревьев. Содержит инклюзы.", img: "images/amber.jpg" },
+            { name: "Метеорит", desc: "Обломок космического тела, упавший на Землю.", img: "images/meteorite.jpg" },
+            { name: "Горный хрусталь", desc: "Прозрачная разновидность кварца.", img: "images/rock-crystal.jpg" },
+            { name: "Родонит", desc: "Розовый минерал с чёрными прожилками. Поделочный камень.", img: "images/rhodonite.jpg" },
+            { name: "Сера", desc: "Ярко-жёлтый минерал вулканического происхождения.", img: "images/sulfur.jpg" }
+        ];
+
+        function renderExhibits() {
+            const grid = document.getElementById('exhibits-grid');
+            grid.innerHTML = '';
+            
+            exhibits.forEach(exhibit => {
+                const card = document.createElement('div');
+                card.className = 'exhibit-card';
+                card.innerHTML = `
+                    <img src="${exhibit.img}" alt="${exhibit.name}" class="exhibit-img" data-name="${exhibit.name}" data-desc="${exhibit.desc}">
+                    <h3>${exhibit.name}</h3>
+                    <p>${exhibit.desc}</p>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.querySelectorAll('.exhibit-img').forEach(img => {
+                img.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const name = this.getAttribute('data-name');
+                    const desc = this.getAttribute('data-desc');
+                    openModal(this.src, name, desc);
+                });
+            });
+        }
+
+        function openModal(imgSrc, name, desc) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('full-image');
+            const caption = document.getElementById('caption');
+            
+            modal.style.display = 'block';
+            modalImg.src = imgSrc;
+            caption.innerHTML = `<strong>${name}</strong><br>${desc}`;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            modal.style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderExhibits();
+            
+            const modal = document.getElementById('image-modal');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            modal.onclick = closeModal;
+            closeBtn.onclick = closeModal;
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'block') {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

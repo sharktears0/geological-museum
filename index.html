@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Геологический музей ИноЗ ЮФУ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная | Геологический музей ИноЗ ЮФУ</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -21,12 +21,85 @@
 
     <main>
         <h1>Добро пожаловать в Геологический музей Института Наук о Земле</h1>
+        
+<img src="images/museum-hall.jpg" alt="Зал Геологического музея" id="clickable-image" style="width: 100%; max-width: 800px; height: auto; display: block; margin: 1rem auto; border-radius: 10px; cursor: pointer;">
+<div id="image-modal" class="modal">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="full-image">
+</div>
+
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.close-modal:hover {
+    color: #bbb;
+}
+</style>
+
+<script>
+var modal = document.getElementById("image-modal");
+var img = document.getElementById("clickable-image");
+var modalImg = document.getElementById("full-image");
+
+img.onclick = function() {
+    modal.style.display = "block";
+    modalImg.src = this.src;
+}
+
+modal.onclick = function() {
+    modal.style.display = "none";
+}
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'block') {
+                    closeModal();
+                }
+            });
+        });
+</script>
+        
+        <p>Минералогический музей Института наук о Земле является самым крупным геологическим музеем на Юге России, обладая самыми полными и масштабными коллекциями образцов минералов и горных пород.</p>
+        
+        <p>Минералогический музей является структурным подразделением Института наук о Земле Южного федерального университета. Это крупнейшее на Юге России собрание образцов минералов, горных пород и фоссилий – более 11500.</p>
+        
+        <p>Музей внесен в реестр минералогических коллекций в России (2005г) и является членом Ассоциации естественно-исторических музеев РФ Российского комитета Международного Совета музеев (2001).</p>
+        
+        <p><a href="exhibits.html" class="button">Посмотреть экспонаты →</a></p>
     </main>
 
     <footer>
-        <p>© 2026 Геологический музей ИноЗ ЮФУ. Все права защищены.</p>
+        <p>© 2026 Геологический музей ИноЗ ЮФУ</p>
         <p>г. Ростов-на-Дону, ул. Зорге 40</p>
     </footer>
 </body>
 </html>
-
